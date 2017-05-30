@@ -26,17 +26,17 @@ TILE_H = SCREEN_H / 3
 # reads one image from the source
 def readframe(url):
     response = urllib2.urlopen(url)
-    return response.read();
+    return response.read()
 
 # updates the main screen with one image
 def update(window, x, y, url):
-    image = readframe(url);
+    image = readframe(url)
     rwops = SDL_RWFromMem(image, sys.getsizeof(image))
     image = IMG_LoadTyped_RW(rwops, True, "JPG")
-    rect = SDL_Rect(TILE_W * x, TILE_H * y, TILE_W, TILE_H);
+    rect = SDL_Rect(TILE_W * x, TILE_H * y, TILE_W, TILE_H)
     SDL_BlitScaled(image, None, SDL_GetWindowSurface(window), rect)
     SDL_FreeSurface(image)
-    SDL_UpdateWindowSurface(window);    
+    SDL_UpdateWindowSurface(window)
 
 def main():
     SDL_Init(SDL_INIT_VIDEO)
@@ -47,7 +47,7 @@ def main():
     event = SDL_Event()
     iterations = 0
     starttime = time.time()
-    file = 0;
+    file = 0
 
     while True:
         # draw all rectangles into buffer
@@ -73,7 +73,7 @@ def main():
     
     SDL_DestroyWindow(window)
     SDL_Quit()
-    return 0;
+    return 0
 
 if __name__ == "__main__":
     sys.exit(main())
