@@ -67,7 +67,7 @@ def main():
             print(fps)
         
         # check for quit button
-        if SDL_PollEvent(ctypes.byref(event)):
+        while SDL_PollEvent(ctypes.byref(event)):
             if event.type == SDL_QUIT:
                 break
     
