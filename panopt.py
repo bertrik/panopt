@@ -25,12 +25,17 @@ TILE_H = SCREEN_H / 3
 
 # reads one image from the source
 def readframe(url):
-    response = urllib2.urlopen(url)
-    return response.read()
+    try:
+        response = urllib2.urlopen(url)
+        return response.read()
+    except Exception:
+        return None
 
 # updates the main screen with one image
 def update(window, x, y, url):
     image = readframe(url)
+    if image is None:
+        return
     rwops = SDL_RWFromMem(image, sys.getsizeof(image))
     image = IMG_LoadTyped_RW(rwops, True, "JPG")
     rect = SDL_Rect(TILE_W * x, TILE_H * y, TILE_W, TILE_H)
