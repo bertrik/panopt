@@ -52,17 +52,22 @@ def main():
     event = SDL_Event()
     iterations = 0
     starttime = time.time()
+    lasttime = starttime
     file = 0
 
     while True:
         # draw all rectangles into buffer
         update(window, 0, 0, "http://localhost:8000/cgi-bin/nph-mjgrab?2")
-        update(window, 1, 0, "http://localhost:8000/cgi-bin/nph-mjgrab?4")
-        update(window, 2, 0, "http://localhost:8000/cgi-bin/nph-mjgrab?6")
-        update(window, 0, 1, "http://localhost:8000/cgi-bin/nph-mjgrab?7")
-        update(window, 1, 1, "http://localhost:8000/cgi-bin/nph-mjgrab?8")
-        update(window, 2, 1, "http://localhost:8000/cgi-bin/nph-mjgrab?9")
+        update(window, 1, 0, "http://localhost:8000/cgi-bin/nph-mjgrab?6")
+        update(window, 2, 0, "http://localhost:8000/cgi-bin/nph-mjgrab?7")
+
+        update(window, 0, 1, "http://localhost:8000/cgi-bin/nph-mjgrab?5")
+        update(window, 1, 1, "http://localhost:8000/cgi-bin/nph-mjgrab?4")
+        update(window, 2, 1, "http://localhost:8000/cgi-bin/nph-mjgrab?1")
+
         update(window, 0, 2, "http://localhost:8000/cgi-bin/nph-mjgrab?10")
+        update(window, 1, 2, "http://localhost:8000/cgi-bin/nph-mjgrab?9")
+        update(window, 2, 2, "http://localhost:8000/cgi-bin/nph-mjgrab?8")
     
         # calculate fps
         iterations = iterations + 1
@@ -70,7 +75,7 @@ def main():
         if (delta_t > 0):
             fps = iterations / delta_t
             print(fps)
-        
+
         # check for quit button
         while SDL_PollEvent(ctypes.byref(event)):
             if event.type == SDL_QUIT:
