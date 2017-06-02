@@ -40,12 +40,18 @@ def readframe(url):
     except Exception:
         return None
 
+# returns a surface with the text rendered in white with a black outline in the specified size
 def renderText(text, size):
     font = TTF_OpenFont("VCR_OSD_MONO_1.001.ttf", size)
-    surface = TTF_RenderText_Shaded(font, text, SDL_Color(255,255,255), SDL_Color(0,0,0))
-    TTF_CloseFont(font);
     
-    return surface
+    TTF_SetFontOutline(font, 2)
+    outline = TTF_RenderText_Blended(font, text, SDL_Color(0, 0, 0))
+    TTF_SetFontOutline(font, 0)
+    surface = TTF_RenderText_Blended(font, text, SDL_Color(255,255,255))
+    TTF_CloseFont(font);
+
+    SDL_BlitSurface(surface, None, outline, None)
+    return outline
 
 # renders one camera onto the window
 def renderCamera(window, camera):
