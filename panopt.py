@@ -48,9 +48,9 @@ def renderText(text, size):
     outline = TTF_RenderText_Blended(font, text, SDL_Color(0, 0, 0))
     TTF_SetFontOutline(font, 0)
     surface = TTF_RenderText_Blended(font, text, SDL_Color(255,255,255))
-    TTF_CloseFont(font);
+    TTF_CloseFont(font)
 
-    SDL_BlitSurface(surface, None, outline, None)
+    SDL_BlitSurface(surface, None, outline, SDL_Rect(2,2,0,0))
     return outline
 
 # renders one camera onto the window
@@ -107,10 +107,10 @@ def main():
     while running:
         for camera in cameras:
             if not running:
-                break;
+                break
 
             # draw one cam
-            renderCamera(window, camera);
+            renderCamera(window, camera)
     
             # check for quit button
             while SDL_PollEvent(ctypes.byref(event)):
