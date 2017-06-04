@@ -37,14 +37,14 @@ def readframe(url):
 # returns a surface with the text rendered in white with a black outline in the specified size
 def renderText(text, size):
     font = TTF_OpenFont("VCR_OSD_MONO_1.001.ttf", size)
-    
+
     TTF_SetFontOutline(font, 2)
     outline = TTF_RenderText_Blended(font, text, SDL_Color(0, 0, 0))
     TTF_SetFontOutline(font, 0)
-    surface = TTF_RenderText_Blended(font, text, SDL_Color(255,255,255))
+    surface = TTF_RenderText_Blended(font, text, SDL_Color(255, 255, 255))
     TTF_CloseFont(font)
 
-    SDL_BlitSurface(surface, None, outline, SDL_Rect(2,2,0,0))
+    SDL_BlitSurface(surface, None, outline, SDL_Rect(2, 2, 0, 0))
     return outline
 
 # renders one camera onto the window
@@ -53,7 +53,7 @@ def renderCamera(window, camera):
     cw = ctypes.c_int()
     ch = ctypes.c_int()
     SDL_GetWindowSize(window, ctypes.byref(cw), ctypes.byref(ch))
-    w,h = cw.value,ch.value
+    w, h = cw.value, ch.value
 
     # get JPG
     jpeg = readframe(camera.url)
@@ -68,7 +68,7 @@ def renderCamera(window, camera):
     rect = SDL_Rect(x, y, w * camera.scale / 4, h * camera.scale / 3)
     SDL_BlitScaled(image, None, SDL_GetWindowSurface(window), rect)
     SDL_FreeSurface(image)
-    
+
     # draw text over it
     SDL_BlitSurface(camera.osd, None, SDL_GetWindowSurface(window), rect)
 
@@ -97,11 +97,11 @@ def readLayout(filename):
         with open(filename, "r") as file:
             dicts = json.loads(file.read())
         for d in dicts:
-            camera = Camera(d["x"],d["y"],d["scale"],d["label"],d["url"])
+            camera = Camera(d["x"], d["y"], d["scale"], d["label"], d["url"])
             cameras.append(camera)
     except Exception as e:
         print("Failed to read, using defaults")
-        cameras = getDefaultLayout();
+        cameras = getDefaultLayout()
         if not os.path.exists(filename):
             with open(filename, "w") as file:
                 file.write(repr(cameras))
@@ -112,10 +112,10 @@ def main():
     TTF_Init()
 
     window = SDL_CreateWindow(b"Panopticon",
-                              SDL_WINDOWPOS_CENTERED, 
                               SDL_WINDOWPOS_CENTERED,
-                              1024, 
-                              768, 
+                              SDL_WINDOWPOS_CENTERED,
+                              1024,
+                              768,
                               SDL_WINDOW_SHOWN)
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP)
 
@@ -125,8 +125,6 @@ def main():
     iterations = 0
     starttime = time.time()
     lasttime = starttime
-    file = 0
-
     
     # prerender OSD
     for camera in cameras:
@@ -149,7 +147,7 @@ def main():
         # calculate fps
         iterations = iterations + 1
         delta_t = (time.time() - starttime)
-        if (delta_t > 0):
+        if delta_t > 0:
             fps = iterations / delta_t
             print(fps)
 
