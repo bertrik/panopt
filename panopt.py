@@ -4,9 +4,8 @@
 #
 # requires python2, ppython-sdl2 !
 #
-# Possible improvements:
-# - read layout from a config file instead of hardcoding it
 
+import os
 import time
 import sys
 import ctypes
@@ -23,6 +22,9 @@ class Camera(object):
         self.scale = scale
         self.label = label
         self.url = url
+
+    def __repr__(self):
+        return json.dumps(self.__dict__, sort_keys=True, indent=4)
 
 # reads one image from the source
 def readframe(url):
@@ -72,24 +74,7 @@ def renderCamera(window, camera):
 
     SDL_UpdateWindowSurface(window)
 
-def main():
-    SDL_Init(SDL_INIT_VIDEO)
-    TTF_Init()
-
-    window = SDL_CreateWindow(b"Panopticon",
-                              SDL_WINDOWPOS_CENTERED, 
-                              SDL_WINDOWPOS_CENTERED,
-                              1024, 
-                              768, 
-                              SDL_WINDOW_SHOWN)
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP)
-    
-    event = SDL_Event()
-    iterations = 0
-    starttime = time.time()
-    lasttime = starttime
-    file = 0
-
+def getDefaultLayout():
     cameras = list()
     cameras.append(Camera(0, 0, 1, "ACHTERDEUR", "http://localhost:8000/cgi-bin/nph-mjgrab?7"))
     cameras.append(Camera(0, 1, 1, "WERKPLAATS", "http://localhost:8000/cgi-bin/nph-mjgrab?6"))
@@ -103,6 +88,45 @@ def main():
     cameras.append(Camera(3, 0, 1, "PARKEER", "http://localhost:8000/cgi-bin/nph-mjgrab?9"))
     cameras.append(Camera(3, 1, 1, "PARKEER", "http://localhost:8000/cgi-bin/nph-mjgrab?8"))
     cameras.append(Camera(3, 2, 1, "INRIT", "http://localhost:8000/cgi-bin/nph-mjgrab?10"))
+    return cameras
+
+# try to read layout file, or create new default if it does not exist
+def readLayout(filename):
+    cameras = list()
+    try:
+        with open(filename, "r") as file:
+            dicts = json.loads(file.read())
+        for d in dicts:
+            camera = Camera(d["x"],d["y"],d["scale"],d["label"],d["url"])
+            cameras.append(camera)
+    except Exception as e:
+        print("Failed to read, using defaults")
+        cameras = getDefaultLayout();
+        if not os.path.exists(filename):
+            with open(filename, "w") as file:
+                file.write(repr(cameras))
+    return cameras
+
+def main():
+    SDL_Init(SDL_INIT_VIDEO)
+    TTF_Init()
+
+    window = SDL_CreateWindow(b"Panopticon",
+                              SDL_WINDOWPOS_CENTERED, 
+                              SDL_WINDOWPOS_CENTERED,
+                              1024, 
+                              768, 
+                              SDL_WINDOW_SHOWN)
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP)
+
+    cameras = readLayout("layout.txt")
+    
+    event = SDL_Event()
+    iterations = 0
+    starttime = time.time()
+    lasttime = starttime
+    file = 0
+
     
     # prerender OSD
     for camera in cameras:
