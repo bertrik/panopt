@@ -5,10 +5,7 @@
 # requires python2, ppython-sdl2 !
 #
 # Possible improvements:
-# - write optional label ("CAM1") for each image (and use a clunky "camera" font)
 # - read layout from a config file instead of hardcoding it
-# - allow some tiles to be bigger than others
-# - make quit work better by using smaller loops
 
 import time
 import sys
